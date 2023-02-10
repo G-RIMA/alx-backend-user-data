@@ -34,7 +34,7 @@ def unauth():
 
 
 @app_views.route('/forbidden', methods=['GET'], strict_slashes=False)
-def unauth():
+def forbidden():
     """ GET /api/v1/forbidden
     """
     return abort(403)
