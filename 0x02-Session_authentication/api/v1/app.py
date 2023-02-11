@@ -4,11 +4,8 @@ Route module for the API
 """
 from os import getenv
 from api.v1.views import app_views
-from api.v1.auth.auth import Auth
-from api.v1.auth.basic_auth import BasicAuth
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
-import os
 
 
 app = Flask(__name__)
@@ -31,11 +28,13 @@ elif getenv('AUTH_TYPE') == 'session_exp_auth':
 
 @app.before_request
 def before_request():
-    """ execute before each request
+    """execute before each request
     """
     if auth is not None:
-        excluded = ['/api/v1/status/', '/api/v1/unauthorized/',
-                          '/api/v1/forbidden/', '/api/v1/auth_session/login/']
+        excluded = ['/api/v1/status/',
+                    '/api/v1/unauthorized/',
+                    '/api/v1/forbidden/',
+                    '/api/v1/auth_session/login/']
         if auth.require_auth(request.path, excluded):
             if (auth.authorization_header(request) is None and
                     auth.session_cookie(request) is None):
@@ -53,15 +52,15 @@ def not_found(error) -> str:
 
 
 @app.errorhandler(401)
-def unauth(error) -> str:
-    """ def unauthorized
+def unauthorized(error) -> str:
+    """ unauthorized
     """
     return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
 def forbidden(error) -> str:
-    """ def forbidden
+    """ Forbidden
     """
     return jsonify({"error": "Forbidden"}), 403
 
