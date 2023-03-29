@@ -41,3 +41,13 @@ class DB:
         self._session.add(user)
         self._session.commit()
         return user
+
+    def find_user_by(self, **kargs) -> TypeVar('User'):
+        ''' def find user '''
+        try:
+            user = self._session.query(User).filter_by(**kargs).first()
+        except TypeError:
+            raise InvalidRequestError
+        if user is None:
+            raise NoResultFound
+        return user
